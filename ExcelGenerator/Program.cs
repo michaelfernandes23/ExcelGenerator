@@ -5,8 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-Console.WriteLine("Hello, World!");
-
+#region Configuration
 var builder = new ConfigurationBuilder();
 BuildConfig(builder);
 
@@ -27,10 +26,36 @@ var host = Host.CreateDefaultBuilder()
     .Build();
 
 var services = ActivatorUtilities.CreateInstance<ExcelService>(host.Services);
-await services.GenerateExcel();
 
+#endregion Configuration
+
+Console.WriteLine("Kindly create a list with values comma separated");
+var text = Console.ReadLine();
+
+try
+{
+    List<string> data = text.Split(',').ToList();
+    var result = await services.GenerateAndReturnExcel(data);
+
+    Console.WriteLine("The excel has been generated. Kindly find the content of the excel below:");
+    Console.WriteLine(System.Text.Encoding.UTF8.GetString(result));
+}
+catch (Exception ex)
+{
+    Log.Logger.Error(ex, "Application caught an exception");
+}
+
+
+#region Methods
 static void BuildConfig(IConfigurationBuilder configurationBuilder)
 {
     configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 }
+
+static List<PersonModel> GetListData()
+{
+    return new List<PersonModel> { new PersonModel() { Id = 1, Name = "Michael" },
+                                   new PersonModel() { Id = 2, Name = "Fernandes" } };
+}
+#endregion Methods

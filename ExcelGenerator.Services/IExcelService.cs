@@ -3,6 +3,7 @@ namespace ExcelGenerator.Services
 {
     public interface IExcelService
     {
-        Task<string> GenerateExcel();
+        Task<byte[]> GenerateAndReturnExcel<T>(List<T> data);
+        Task GenerateExcel<T>(List<T> data, string fileName);
     }
 }
