@@ -38,7 +38,7 @@ try
     var result = await services.GenerateAndReturnExcel(data);
 
     Console.WriteLine("The excel has been generated. Kindly find the content of the excel below:");
-    Console.WriteLine(System.Text.Encoding.UTF8.GetString(result));
+    Console.WriteLine(Convert.ToBase64String(result));
 }
 catch (Exception ex)
 {
